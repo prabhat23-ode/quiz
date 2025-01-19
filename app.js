@@ -3,6 +3,7 @@ let ans = Array.from(document.getElementsByClassName("answer"));
 let quizBox = document.querySelector(".quiz-container");
 let card = document.querySelector(".card");
 let nextQuestion = document.getElementById("next-question");
+let score = 0;
 
 let url = "https://opentdb.com/api.php?amount=1&difficulty=medium&type=boolean";
 
@@ -21,11 +22,15 @@ function quiz() {
       let newQuestion = data.results[0].question;
       let correctAns = data.results[0].correct_answer;
 
-      question.innerText = newQuestion.replace(/&quot;/g, '"').replace(/&#039;/g, "'").replace(/&rsquo;/g, ",");
+      question.innerText = newQuestion
+        .replace(/&quot;/g, '"')
+        .replace(/&#039;/g, "'")
+        .replace(/&rsquo;/g, ",");
 
       ans.forEach((elm) => {
         elm.addEventListener("click", () => {
           if (correctAns == elm.innerText) {
+            score += 1;
             document.getElementById("stat").innerText = "True";
             quizBox.style.display = "none";
             card.style.background = "rgb(64, 255, 128)";
@@ -36,8 +41,15 @@ function quiz() {
             card.style.background = "rgb(255, 64, 64)";
             card.style.display = "block";
           }
+
+          document.getElementById("score").innerText = score;
         });
       });
+    })
+    .catch((error) => {
+      document.getElementById(
+        "stat"
+      ).innerText = `There was a problem with the fetch operation:${error}`;
     });
 }
 
